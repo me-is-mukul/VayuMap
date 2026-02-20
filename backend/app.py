@@ -1,5 +1,9 @@
 from flask import Flask, request, jsonify
 import numpy as np
+import random
+import json
+import os
+
 
 app = Flask(__name__)
 
@@ -75,6 +79,27 @@ def generate_aqi():
     }
 
     return jsonify(response)
+
+
+@app.route('/generate_population', methods=['GET'])
+def generate_population():
+
+    files = [
+        "population_data/population_matrix_1.json",
+        "population_data/population_matrix_2.json",
+        "population_data/population_matrix_3.json"
+    ]
+
+    selected_file = random.choice(files)
+
+    try:
+        with open(selected_file, "r") as f:
+            data = json.load(f)
+
+        return jsonify(data)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == '__main__':
